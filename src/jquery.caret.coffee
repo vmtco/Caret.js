@@ -20,7 +20,29 @@ class EditableCaret
     @domInputor = @$inputor[0]
 
   # NOTE: Duck type
-  setPos: (pos) -> @domInputor
+  setPos: (pos) ->
+    if sel = oWindow.getSelection()
+      offset = 0
+      found = false
+      do fn = (pos, parent=@domInputor) ->
+        for node in parent.childNodes
+          if found
+            break
+          if node.nodeType == 3
+            if offset + node.length >= pos
+              found = true
+              range = oDocument.createRange()
+              range.setStart(node, pos - offset)
+              sel.removeAllRanges()
+              sel.addRange(range)
+              break
+            else
+              offset += node.length
+          else
+            fn(pos, node)
+
+    @domInputor
+
   getIEPosition: -> this.getPosition()
   getPosition: ->
     offset = this.getOffset()
@@ -56,7 +78,7 @@ class EditableCaret
   getOffset: (pos) ->
     if oWindow.getSelection and range = this.range()
       # endContainer would be the inputor in Firefox at the begnning of a line
-      if range.endOffset - 1 > 0 and range.endContainer is not @domInputor
+      if range.endOffset - 1 > 0 and range.endContainer isnt @domInputor
         clonedRange = range.cloneRange()
         clonedRange.setStart(range.endContainer, range.endOffset - 1)
         clonedRange.setEnd(range.endContainer, range.endOffset)

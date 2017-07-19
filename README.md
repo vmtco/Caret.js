@@ -1,7 +1,7 @@
 Caret.js
 ========
 
-Get caret postion or offset from inputor
+Get caret position or offset from inputor
 
 This is the core function that working in [At.js](http://ichord.github.com/At.js).  
 Now, It just become an simple jquery plugin so that everybody can use it.  
@@ -41,7 +41,6 @@ $('#inputor').caret('offset', fixPos);
 $('#inputor').caret('pos'); // => 15
 
 // Set caret position in the inputor
-// not working in contentEditable mode
 $('#inputor').caret('pos', 15);
 
 // set iframe context
